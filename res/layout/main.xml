@@ -6,7 +6,7 @@
 	android:layout_height="fill_parent">
 
 	<TextView
-		android:id="@+id/editTextTime"
+		android:id="@+id/textTime"
 		android:text="@string/time_default"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
