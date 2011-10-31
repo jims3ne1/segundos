@@ -41,6 +41,7 @@ public class SegundosActivity extends Activity {
 			if (currentText == playText)
 			{
 				((Button)mButtonPlayPause).setText(R.string.pause);
+				mButtonStop.setEnabled(true);
 				mHandler.removeCallbacks(sUpdateTimer);
 				mHandler.postDelayed(sUpdateTimer, DELAY_IN_MILLESECONDS);
 			}
@@ -57,6 +58,8 @@ public class SegundosActivity extends Activity {
 		@Override
 		public void onClick(View v) {
 			mHandler.removeCallbacks(sUpdateTimer);
+			((Button)mButtonPlayPause).setText(R.string.play);
+			mButtonStop.setEnabled(false);
 			resetCalendar();
 		}
 	}; 
@@ -71,7 +74,7 @@ public class SegundosActivity extends Activity {
 		}
 	};
  
-	private void setMembers()
+	private void setDefaults()
     {
     	mTextTimer = findViewById(R.id.textTime);
     	mButtonPlayPause = findViewById(R.id.buttonPlayPause);
@@ -82,6 +85,7 @@ public class SegundosActivity extends Activity {
     	
     	mButtonPlayPause.setOnClickListener(sButtonPlayPauseListener);
     	mButtonStop.setOnClickListener(sButtonStopListener);
+    	mButtonStop.setEnabled(false);
     }
     
     private void setPreferences()
@@ -114,7 +118,7 @@ public class SegundosActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        setMembers();
+        setDefaults();
         setPreferences();
     }
 }
