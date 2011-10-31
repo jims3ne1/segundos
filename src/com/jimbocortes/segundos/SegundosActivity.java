@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ public class SegundosActivity extends Activity {
 	private View mTextTimer;
 	private View mButtonPlayPause;
 	private View mButtonStop;
+	private View mImageButtonSettings;
 	private SharedPreferences mPrefs;
 	private Editor mPrefEditor;
 	private Handler mHandler;  
@@ -64,6 +66,15 @@ public class SegundosActivity extends Activity {
 		}
 	}; 
 	
+	private OnClickListener sImageButtonListener = new OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+			Intent i = new Intent(getBaseContext(), SetPreferencesActivity.class);
+			startActivity(i);
+		}
+	};
+	
 	private Runnable sUpdateTimer = new Runnable() {
 		
 		@Override
@@ -79,12 +90,14 @@ public class SegundosActivity extends Activity {
     	mTextTimer = findViewById(R.id.textTime);
     	mButtonPlayPause = findViewById(R.id.buttonPlayPause);
     	mButtonStop = findViewById(R.id.buttonStop);
+    	mImageButtonSettings = findViewById(R.id.imageButtonSettings);
     	mHandler = new Handler();
     	mDateFormat = new SimpleDateFormat("HH:mm:ss");
     	resetCalendar();
     	
     	mButtonPlayPause.setOnClickListener(sButtonPlayPauseListener);
     	mButtonStop.setOnClickListener(sButtonStopListener);
+    	mImageButtonSettings.setOnClickListener(sImageButtonListener);
     	mButtonStop.setEnabled(false);
     }
     
@@ -121,4 +134,19 @@ public class SegundosActivity extends Activity {
         setDefaults();
         setPreferences();
     }
+    
+    @Override
+    protected void onPause() 
+    {
+    	super.onPause();
+    	
+    }
+    
+    @Override
+    protected void onResume() 
+    {
+    	super.onResume();
+    }
+    
+    
 }
