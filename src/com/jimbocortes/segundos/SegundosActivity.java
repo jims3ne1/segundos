@@ -26,8 +26,9 @@ public class SegundosActivity extends Activity {
 	private Editor mPrefEditor;
 	private Handler mHandler;  
 	private Calendar mCalendar; 
-	private long mTime;
 	private Format mDateFormat;
+	
+	private static long DELAY_IN_MILLESECONDS = 1000; 
 	 
 	private OnClickListener sButtonPlayPauseListener = new OnClickListener() 
 	{ 	
@@ -41,11 +42,12 @@ public class SegundosActivity extends Activity {
 			{
 				((Button)mButtonPlayPause).setText(R.string.pause);
 				mHandler.removeCallbacks(sUpdateTimer);
-				mHandler.postDelayed(sUpdateTimer, 1000);
+				mHandler.postDelayed(sUpdateTimer, DELAY_IN_MILLESECONDS);
 			}
 			else
 			{
 				((Button)mButtonPlayPause).setText(R.string.play);
+				mHandler.removeCallbacks(sUpdateTimer);
 			}
 		}
 	};
@@ -54,7 +56,8 @@ public class SegundosActivity extends Activity {
 	{ 	
 		@Override
 		public void onClick(View v) {
-			
+			mHandler.removeCallbacks(sUpdateTimer);
+			resetCalendar();
 		}
 	}; 
 	
@@ -64,7 +67,7 @@ public class SegundosActivity extends Activity {
 		public void run() {
 			mCalendar.add(Calendar.SECOND, 1);
 			((TextView)mTextTimer).setText(mDateFormat.format(mCalendar.getTime()));
-			mHandler.postDelayed(this, 1000);
+			mHandler.postDelayed(this, DELAY_IN_MILLESECONDS);
 		}
 	};
  
@@ -75,14 +78,10 @@ public class SegundosActivity extends Activity {
     	mButtonStop = findViewById(R.id.buttonStop);
     	mHandler = new Handler();
     	mDateFormat = new SimpleDateFormat("HH:mm:ss");
-    	
-    	mCalendar = Calendar.getInstance();
-    	mCalendar.set(Calendar.HOUR_OF_DAY, 0);
-    	mCalendar.set(Calendar.MINUTE, 0);
-    	mCalendar.set(Calendar.SECOND, 0);
-    	mCalendar.set(Calendar.MILLISECOND,0);
+    	resetCalendar();
     	
     	mButtonPlayPause.setOnClickListener(sButtonPlayPauseListener);
+    	mButtonStop.setOnClickListener(sButtonStopListener);
     }
     
     private void setPreferences()
@@ -96,6 +95,19 @@ public class SegundosActivity extends Activity {
     		mPrefEditor.putInt(PreferenceConstants.PREFERENCE_LOW_INTERVAL_TIME, PreferenceConstants.DEFAULT_PREFERENCE_LOW_INTERVAL_TIME);
     		mPrefEditor.putInt(PreferenceConstants.PREFERENCE_HIGH_INTERVAL_TIME, PreferenceConstants.DEFAULT_PREFERENCE_HIGH_INTERVAL_TIME);
     	}
+    }
+    
+    private void resetCalendar()
+    {
+    	if (mCalendar == null)
+    		mCalendar = Calendar.getInstance();
+    	
+    	mCalendar.set(Calendar.HOUR_OF_DAY, 0);
+    	mCalendar.set(Calendar.MINUTE, 0);
+    	mCalendar.set(Calendar.SECOND, 0);
+    	mCalendar.set(Calendar.MILLISECOND,0);
+    	((TextView)mTextTimer).setText(R.string.time_default);
+    	
     }
     
     @Override
